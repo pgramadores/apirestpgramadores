@@ -7,13 +7,14 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cors = require('cors');
 var ctrl = require('./controller');
+var config = require('./config');
 
 // Configuramos Express
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
-app.set('port', 3000);
+app.set('port', config.puerto);
 
 // Iniciamos las rutas de nuestro servidor/API
 var router = express.Router();
@@ -29,9 +30,9 @@ app.use(router);
 
 // Iniciamos el servidor y la base de datos
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/pgramadores', function(err) {
+mongoose.connect('mongodb://'+config.domain+'/pgramadores', function(err) {
     // Comprobar errores siempre
     app.listen(app.get('port'), function(){
-        console.log('Express corriendo en http://localhost:3000');
+        console.log('Express corriendo en http://'+config.domain+':3000');
     });
 });

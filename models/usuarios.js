@@ -6,7 +6,8 @@ var usuarios = new Schema({
     correo:     { type : String, required : true, unique : true },
     fecha:      { type : Date,   required : true },
     ip:         { type : String, required : true },
-    ubicacion:  { type : String, required : true }
+    ubicacion:  { type : String, required : true },
+    suscripcion:{ type : Boolean,required : true }
 });
 
 module.exports = mongoose.model('usuarios', usuarios);

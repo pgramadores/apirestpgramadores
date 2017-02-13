@@ -3,11 +3,15 @@ var User = mongoose.model('usuarios');
 var satelize = require('satelize');
 var moment = require('moment');
 var requestIp = require('request-ip');
+var config = require('./config');
+var suscrip = require('./suscripciones');
 
 exports.registro = function(req, res) {
 
     try {
-        var clientIp = requestIp.getClientIp(req);
+
+        var clientIp = config.dev ? '190.47.115.14': requestIp.getClientIp(req);
+
         var ubicacion = satelize.satelize({ip:clientIp}, function(err, payload) { return payload.continent.es+','+payload.country.es+','+payload.country_code; });
 
         var user = new User({
@@ -20,6 +24,7 @@ exports.registro = function(req, res) {
         });
 
         user.save(function(err){
+            suscrip.InvitacionSlack(req.body.correo);
             return res.status(200).jsonp(user);
         });
     } catch (e) {

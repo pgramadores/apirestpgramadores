@@ -11,7 +11,7 @@ exports.registro = function(req, res) {
         correo:     req.body.correo,
         fecha:      moment().format(),
         ip:         ip,
-        ubicacion:  satelize.satelize({ip:ip}, function(err, payload) { return payload.country.en; });,
+        ubicacion:  satelize.satelize({ip:ip}, function(err, payload) { return payload.country.en; }),
         suscripcion:req.body.suscripcion
     });
 

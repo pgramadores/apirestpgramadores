@@ -15,6 +15,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 app.set('port', config.puerto);
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://'+config.domain);
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    next();
+});
 
 // Iniciamos las rutas de nuestro servidor/API
 var router = express.Router();
@@ -33,6 +39,6 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://'+config.domain+'/pgramadores', function(err) {
     // Comprobar errores siempre
     app.listen(app.get('port'), function(){
-        console.log('Express corriendo en http://'+config.domain+':3000');
+        console.log('Express corriendo en http://'+config.domain+':'+config.puerto);
     });
 });

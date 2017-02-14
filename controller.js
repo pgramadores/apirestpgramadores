@@ -1,34 +1,30 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('usuarios');
-var satelize = require('satelize');
-var moment = require('moment');
-var requestIp = require('request-ip');
 var config = require('./config');
-var suscrip = require('./suscripciones');
-var xss = require('xss');
+var serv = require('./servicios');
+
 
 exports.registro = function(req, res) {
 
     try {
 
-        var clientIp = config.dev ? '190.47.115.14': requestIp.getClientIp(req);
-
-        var ubicacion = satelize.satelize({ip:clientIp}, function(err, payload) { return payload.continent.es+','+payload.country.es+','+payload.country_code; });
+        var clientIp = config.dev ? '190.47.115.14': serv.IP(req);
 
         var user = new User({
-            nombres:    xss(req.body.nombres),
-            correo:     xss(req.body.correo),
-            fecha:      moment().format(),
+            nombres:    serv.Sanar(req.body.nombres),
+            correo:     serv.Sanar(req.body.correo),
+            fecha:      serv.Ahora(),
             ip:         clientIp,
-            ubicacion:  ubicacion,
+            ubicacion:  serv.UbicacionPorIp(clientIp),
             suscripcion:true
         });
 
         user.save(function(err){
-            suscrip.InvitacionSlack(xss(req.body.correo));
+            serv.InvitacionSlack(serv.Sanar(req.body.correo));
             return res.status(200).jsonp(user);
         });
-    } catch (e) {
+
+    }catch (e) {
         console.log(e);
         return res.status(500).jsonp({ok:false});
     }

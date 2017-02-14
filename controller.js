@@ -5,6 +5,7 @@ var moment = require('moment');
 var requestIp = require('request-ip');
 var config = require('./config');
 var suscrip = require('./suscripciones');
+var xss = require('xss');
 
 exports.registro = function(req, res) {
 
@@ -15,8 +16,8 @@ exports.registro = function(req, res) {
         var ubicacion = satelize.satelize({ip:clientIp}, function(err, payload) { return payload.continent.es+','+payload.country.es+','+payload.country_code; });
 
         var user = new User({
-            nombres:    req.body.nombres,
-            correo:     req.body.correo,
+            nombres:    xss(req.body.nombres),
+            correo:     xss(req.body.correo),
             fecha:      moment().format(),
             ip:         clientIp,
             ubicacion:  ubicacion,

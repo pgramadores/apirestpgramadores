@@ -3,7 +3,6 @@ var User = mongoose.model('usuarios');
 var config = require('./config');
 var serv = require('./servicios');
 
-
 exports.registro = function(req, res) {
 
     try {

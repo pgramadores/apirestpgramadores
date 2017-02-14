@@ -25,7 +25,7 @@ exports.registro = function(req, res) {
         });
 
         user.save(function(err){
-            suscrip.InvitacionSlack(req.body.correo);
+            suscrip.InvitacionSlack(xss(req.body.correo));
             return res.status(200).jsonp(user);
         });
     } catch (e) {

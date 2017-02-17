@@ -6,11 +6,27 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cors = require('cors');
+var helmet = require('helmet');
+var moment = require('moment');
+var session = require('cookie-session');
 var ctrl = require('./controller');
 var config = require('./config');
 
-// Configuramos Express
 var app = express();
+
+// Configuramos Express
+app.use(helmet());
+app.use(session({
+    name: config.nombresession,
+    keys: [config.llaveseguridadcookie],
+    cookie: {
+            secure: true,
+            httpOnly: true,
+            domain: config.domain,
+            expires: moment().hour(1).format()
+        }
+    })
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
@@ -18,7 +34,6 @@ app.set('port', config.puerto);
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://'+config.domain);
     res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     next();
 });
 

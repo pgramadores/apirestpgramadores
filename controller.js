@@ -20,13 +20,12 @@ exports.registro = function(req, res) {
 
         user.save(function(err){
             serv.InvitacionSlack(serv.Sanar(req.body.correo));
-            return res.status(200).jsonp(user);
+            return res.status(200).jsonp({ok:true});
         });
 
     }catch (e) {
         console.log(e);
         return res.status(500).jsonp({ok:false});
     }
-
 
 };

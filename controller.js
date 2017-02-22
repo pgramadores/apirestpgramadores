@@ -18,7 +18,7 @@ exports.registro = function(req, res) {
                     fecha:      serv.Ahora(),
                     ip:         clientIp,
                     ubicacion:  serv.UbicacionPorIp(clientIp),
-                    suscripcion:true
+                    suscripcion:false
                 });
                     //ingreso de usuario
                     user.save(function(err){
@@ -31,6 +31,7 @@ exports.registro = function(req, res) {
                         }
                         serv.InvitacionSlack(req.body.correo);
                         serv.InvitacionMeetup(req.body.correo);
+                        serv.CorreoVerificacion(req.body.correo);
                         return res.status(200).jsonp({ok:true});
                 });
 
@@ -45,4 +46,23 @@ exports.registro = function(req, res) {
         return res.status(500).jsonp({ok:false});
     }
 
+};
+
+exports.registro = function(req, res) {
+
+    correo = serv.DesencriptadorCorreo(req.params.codigo);
+    User.find({'correo': correo}, function(err, usuario){
+        if(err){
+            return res.status(500).jsonp({ok:false});
+        }
+
+        usuario.suscripcion = true;
+        usuario.save(function(err){
+            if(err){
+                return res.status(500).jsonp({ok:false});
+            }
+
+            return res.status(200).jsonp({ok:true});
+        })
+    });
 };

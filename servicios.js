@@ -22,6 +22,54 @@ exports.InvitacionSlack = function(correo){
     });
 }
 
+exports.CorreoVerificacion = function(correo){
+
+    var nodemailer = require('nodemailer');
+    var smtpTransport = require('nodemailer-smtp-transport');
+
+    var transporter = nodemailer.createTransport(smtpTransport({
+        service: 'Gmail',
+        auth: {
+            user: config.correo.usuario,
+            pass: config.correo.pass
+        }
+    }));
+
+    //generador de link de confirmacion
+    const crypto = require('crypto');
+    const cipher = crypto.createCipher(config.cipher.metodo, config.cipher.pass);
+
+    let encrypted = cipher.update(correo, config.cipher.input, config.cipher.output);
+    encrypted += cipher.final(config.cipher.output);
+
+    //falta enchular el mail
+    let mailOptions = {
+        from: '"Pro-Gramadores 👥" <no-reply@pro-gramadores.org>',
+        to: correo,
+        subject: 'Bienvenido a la comunidad de Pro-Gramadores',
+        text: 'http://'+config.domain+'/suscripcion/'+encrypted,   //link erroneo hay que arreglar
+        html: ''
+    };
+
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            return console.log(error);
+        }
+        console.log('Message sent: ' + info.response);
+    });
+}
+
+exports.DesencriptadorCorreo = function(codigo){
+
+    const crypto = require('crypto');
+    const decipher = crypto.createDecipher(config.cipher.metodo, config.cipher.pass);
+
+    let correo = decipher.update(codigo, config.cipher.output, config.cipher.input);
+    correo += decipher.final(config.cipher.input);
+    return correo;
+}
+
 exports.Sanar = function(texto){
 
     var sanitizeHtml = require('sanitize-html');

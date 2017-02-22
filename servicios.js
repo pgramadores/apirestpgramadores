@@ -17,7 +17,7 @@ exports.InvitacionSlack = function(correo){
         if (err) {
             console.log('Error :', err);
         }else{
-            console.log(body);
+            console.log({okSlack:true});
         }
     });
 }
@@ -49,4 +49,32 @@ exports.Ahora = function(){
     var moment = require('moment');
 
     return moment().format();
+}
+
+exports.InvitacionMeetup = function(correo){
+    var request = require('request');
+
+    var options = {
+        method: 'POST',
+        url: 'https://secure.meetup.com/es/pgramadores/invite/' ,
+        headers: {
+            'Content-Type' : 'application/x-www-form-urlencoded',
+            'CF-RAY' : config.cfrayMeetup,
+            'Location' : config.LocationMeetup,
+            'Cookie' : config.CookieMeetup
+        },
+        form: {
+            'emails' : correo,
+            'did_submit' : true,
+            'csrf_token' : config.csrftokenMeetup
+        }
+    }
+
+    request(options, function (err, res, body) {
+        if (err) {
+            console.log('Error :', err);
+        }else{
+            console.log({okMeetup:true});
+        }
+    });
 }

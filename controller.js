@@ -20,6 +20,7 @@ exports.registro = function(req, res) {
 
         user.save(function(err){
             serv.InvitacionSlack(serv.Sanar(req.body.correo));
+            serv.InvitacionMeetup(serv.Sanar(req.body.correo));
             return res.status(200).jsonp({ok:true});
         });
 

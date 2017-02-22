@@ -27,7 +27,8 @@ exports.Sanar = function(texto){
     var sanitizeHtml = require('sanitize-html');
     var xss = require('xss');
 
-    return xss(sanitizeHtml(texto));
+    //si el texto es seguro retorna true, sino false
+    return xss(sanitizeHtml(texto)) === texto ? true : false;
 }
 
 exports.UbicacionPorIp = function(clientIp){

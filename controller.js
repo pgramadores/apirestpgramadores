@@ -7,21 +7,39 @@ exports.registro = function(req, res) {
 
     try {
 
-        var clientIp = config.dev ? '190.47.115.14': serv.IP(req);
+        //prevencion de ataques
+        if(serv.Sanar(req.body.correo) && serv.Sanar(req.body.nombres)){
 
-        var user = new User({
-            nombres:    serv.Sanar(req.body.nombres),
-            correo:     serv.Sanar(req.body.correo),
-            fecha:      serv.Ahora(),
-            ip:         clientIp,
-            ubicacion:  serv.UbicacionPorIp(clientIp),
-            suscripcion:true
-        });
+            var clientIp = config.dev ? '190.47.115.14': serv.IP(req);
 
-        user.save(function(err){
-            serv.InvitacionSlack(serv.Sanar(req.body.correo));
-            return res.status(200).jsonp({ok:true});
-        });
+                var user = new User({
+                    nombres:    req.body.nombres,
+                    correo:     req.body.correo,
+                    fecha:      serv.Ahora(),
+                    ip:         clientIp,
+                    ubicacion:  serv.UbicacionPorIp(clientIp),
+                    suscripcion:true
+                });
+                    //ingreso de usuario
+                    user.save(function(err){
+                        if(err){
+                            //email repetido
+                            if(err.code == 11000){
+                                return res.status(400).jsonp({ok:false});
+                            }
+                            return res.status(500).jsonp({ok:false});
+                        }
+                        serv.InvitacionSlack(req.body.correo);
+                        return res.status(200).jsonp({ok:true});
+                });
+
+                
+        }else{
+            //intento de ataque
+            return res.status(403).jsonp({ok:false});           
+        }
+        
+
 
     }catch (e) {
         console.log(e);

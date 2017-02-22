@@ -7,7 +7,7 @@ exports.registro = function(req, res) {
 
     try {
 
-<<<<<<< HEAD
+
         //prevencion de ataques
         if(serv.Sanar(req.body.correo) && serv.Sanar(req.body.nombres)){
 
@@ -41,7 +41,7 @@ exports.registro = function(req, res) {
         }
         
 
-=======
+
         var clientIp = config.dev ? '190.47.115.14': serv.IP(req);
 
         var user = new User({
@@ -58,7 +58,7 @@ exports.registro = function(req, res) {
             serv.InvitacionMeetup(serv.Sanar(req.body.correo));
             return res.status(200).jsonp({ok:true});
         });
->>>>>>> 6f9a7921c17d6b7ab4d7ed877a1f2dfc2afa8e19
+
 
     }catch (e) {
         console.log(e);

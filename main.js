@@ -65,6 +65,9 @@ router.get('/', function(req, res) {
 // Rutas de registro
 router.post('/usuarios/registro', ctrl.registro);
 
+// Ruta de aceptación de suscripción
+router.get('/usuarios/suscripcion/:codigo',ctrl.AceptarSuscripcion);
+
 app.use(router);
 
 // Iniciamos el servidor y la base de datos

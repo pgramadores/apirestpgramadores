@@ -48,15 +48,16 @@ exports.CorreoVerificacion = function(correo){
         to: correo,
         subject: 'Bienvenido a la comunidad de Pro-Gramadores',
         text: 'http://'+config.domain+'/suscripcion/'+encrypted,   //link erroneo hay que arreglar
-        html: ''
+        html: 'http://'+config.domain+'/suscripcion/'+encrypted
     };
 
 
     transporter.sendMail(mailOptions, function(error, info){
         if(error){
             return console.log(error);
+        }else {
+            return console.log({okMail:true});
         }
-        console.log('Message sent: ' + info.response);
     });
 }
 
@@ -101,21 +102,22 @@ exports.Ahora = function(){
 }
 
 exports.InvitacionMeetup = function(correo){
+    
     var request = require('request');
 
     var options = {
         method: 'POST',
-        url: 'https://secure.meetup.com/es/pgramadores/invite/' ,
+        url: config.meetup.LocationM ,
         headers: {
             'Content-Type' : 'application/x-www-form-urlencoded',
-            'CF-RAY' : config.cfrayMeetup,
-            'Location' : config.LocationMeetup,
-            'Cookie' : config.CookieMeetup
+            'CF-RAY' : config.meetup.cfrayM,
+            'Location' : config.meetup.LocationM,
+            'Cookie' : config.meetup.CookieM
         },
         form: {
             'emails' : correo,
             'did_submit' : true,
-            'csrf_token' : config.csrftokenMeetup
+            'csrf_token' : config.meetup.csrftoken
         }
     }
 

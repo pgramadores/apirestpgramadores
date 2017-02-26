@@ -67,6 +67,32 @@ exports.AceptarSuscripcion = function(req, res) {
             return res.status(500).jsonp({ok:false, mensaje: 'A ocurrido un error en el sistema'});
         });
     } catch (e) {
+        console.log('error:', e);
+        return res.status(500).jsonp({ok:false, mensaje: 'A ocurrido un error en el sistema'});
+    }
+
+};
+
+exports.CancelaSuscripcion = function(req, res) {
+
+    try {
+
+        let correo = serv.DesencriptadorCorreo(req.body.codigo);
+
+        let promise = User.findOne({'correo': correo }).exec();
+
+        promise.then(function(usuario) {
+            usuario.suscripcion = false;
+            usuario.save();
+        })
+        .then(function() {
+            return res.status(200).jsonp({ok:true,mensaje:'Tú suscripción ha sido cancelada con exito, a partir de hoy dejaras de recibir todas las novedades de Pro-Gramadores, si estas inscrito en otras redes sociales de pro-gramadores deberas darte de baja en cada una de ellas. Esperamos haberte ayudado en tu proceso de aprendizaje, fue un gusto tenerte con nosotros.'});
+        })
+        .catch(function(err){
+            console.log('error:', err);
+            return res.status(500).jsonp({ok:false, mensaje: 'A ocurrido un error en el sistema'});
+        });
+    } catch (e) {
         return res.status(500).jsonp({ok:false, mensaje: 'A ocurrido un error en el sistema'});
     }
 

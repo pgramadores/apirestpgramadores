@@ -68,6 +68,9 @@ router.post('/usuarios/registro', ctrl.registro);
 // Ruta de aceptación de suscripción
 router.post('/usuarios/suscripcion/',ctrl.AceptarSuscripcion);
 
+// Ruta de cancelación de suscripción
+router.post('/usuarios/cancelasuscripcion/',ctrl.CancelaSuscripcion);
+
 app.use(router);
 
 // Iniciamos el servidor y la base de datos

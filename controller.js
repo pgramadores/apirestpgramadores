@@ -25,7 +25,6 @@ exports.registro = function(req, res) {
 
             promise.then(function (doc) {
                 serv.InvitacionSlack(req.body.correo);
-                serv.InvitacionMeetup(req.body.correo);
                 serv.CorreoVerificacion(req.body.correo);
                 return res.status(200).jsonp({ok:true});
             })

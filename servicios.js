@@ -100,32 +100,3 @@ exports.Ahora = function(){
 
     return moment().format();
 }
-
-exports.InvitacionMeetup = function(correo){
-    
-    var request = require('request');
-
-    var options = {
-        method: 'POST',
-        url: config.meetup.LocationM ,
-        headers: {
-            'Content-Type' : 'application/x-www-form-urlencoded',
-            'CF-RAY' : config.meetup.cfrayM,
-            'Location' : config.meetup.LocationM,
-            'Cookie' : config.meetup.CookieM
-        },
-        form: {
-            'emails' : correo,
-            'did_submit' : true,
-            'csrf_token' : config.meetup.csrftoken
-        }
-    }
-
-    request(options, function (err, res, body) {
-        if (err) {
-            console.log('Error :', err);
-        }else{
-            console.log({okMeetup:true});
-        }
-    });
-}

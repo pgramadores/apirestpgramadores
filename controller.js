@@ -9,9 +9,9 @@ exports.registro = function(req, res) {
         //prevencion de ataques
         if(serv.Sanar(req.body.correo) && serv.Sanar(req.body.nombres)){
 
-            var clientIp = config.dev ? '190.47.115.14': serv.IP(req);
+            let clientIp = config.dev ? '190.47.115.14': serv.IP(req);
 
-            var user = new User({
+            let user = new User({
                 nombres:    req.body.nombres,
                 correo:     req.body.correo,
                 fecha:      serv.Ahora(),
@@ -19,21 +19,21 @@ exports.registro = function(req, res) {
                 ubicacion:  serv.UbicacionPorIp(clientIp),
                 suscripcion:false
             });
-                //ingreso de usuario
-            user.save(function(err){
-                if(err){
-                    //email repetido
-                    if(err.code == 11000){
-                        return res.status(400).jsonp({ok:false});
-                    }else {
-                        return res.status(500).jsonp({ok:false});
-                    }
 
+            //ingreso de usuario
+            var promise = user.save();
+
+            promise.then(function (doc) {
+                serv.InvitacionSlack(req.body.correo);
+                serv.InvitacionMeetup(req.body.correo);
+                serv.CorreoVerificacion(req.body.correo);
+                return res.status(200).jsonp({ok:true});
+            })
+            .catch(function(err){
+                if(err.code == 11000){
+                    return res.status(400).jsonp({ok:false});
                 }else {
-                    serv.InvitacionSlack(req.body.correo);
-                    serv.InvitacionMeetup(req.body.correo);
-                    serv.CorreoVerificacion(req.body.correo);
-                    return res.status(200).jsonp({ok:true});
+                    return res.status(500).jsonp({ok:false});
                 }
             });
         }else{
@@ -50,20 +50,25 @@ exports.registro = function(req, res) {
 
 exports.AceptarSuscripcion = function(req, res) {
 
-    let correo = serv.DesencriptadorCorreo(req.params.codigo);
+    try {
 
-    User.findOne({'correo': correo}, function(err, usuario){
-        if(err){
-            return res.status(500).jsonp({ok:false});
-        }else {
+        let correo = serv.DesencriptadorCorreo(req.body.codigo);
+
+        let promise = User.findOne({'correo': correo }).exec();
+
+        promise.then(function(usuario) {
             usuario.suscripcion = true;
-            usuario.save(function(err){
-                if(err){
-                    return res.status(500).jsonp({ok:false});
-                }else {
-                    return res.status(200).jsonp({ok:true});
-                }
-            })
-        }
-    });
+            usuario.save();
+        })
+        .then(function() {
+            return res.status(200).jsonp({ok:true,mensaje:'Tú suscripción ha sido confirmada con exito, a partir de hoy comenzaras a recibir todas las novedades de Pro-Gramadores'});
+        })
+        .catch(function(err){
+            console.log('error:', err);
+            return res.status(500).jsonp({ok:false, mensaje: 'A ocurrido un error en el sistema'});
+        });
+    } catch (e) {
+        return res.status(500).jsonp({ok:false, mensaje: 'A ocurrido un error en el sistema'});
+    }
+
 };

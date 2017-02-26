@@ -66,7 +66,7 @@ router.get('/', function(req, res) {
 router.post('/usuarios/registro', ctrl.registro);
 
 // Ruta de aceptación de suscripción
-router.get('/usuarios/suscripcion/:codigo',ctrl.AceptarSuscripcion);
+router.post('/usuarios/suscripcion/',ctrl.AceptarSuscripcion);
 
 app.use(router);
 

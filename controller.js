@@ -29,6 +29,9 @@ exports.registro = function(req, res) {
                 return res.status(200).jsonp({ok:true});
             })
             .catch(function(err){
+
+                console.log(err);
+
                 if(err.code == 11000){
                     return res.status(400).jsonp({ok:false});
                 }else {
@@ -37,6 +40,7 @@ exports.registro = function(req, res) {
             });
         }else{
             //intento de ataque
+            console.log("error de datos truncados");
             return res.status(403).jsonp({ok:false});
         }
 

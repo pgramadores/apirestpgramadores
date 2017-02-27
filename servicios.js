@@ -85,9 +85,10 @@ exports.Sanar = function(texto){
 
 exports.UbicacionPorIp = function(clientIp){
 
-    var satelize = require('satelize');
+    var geoip = require('geoip-lite');
 
-    return satelize.satelize({ip:clientIp}, function(err, payload) { return payload.continent.es+','+payload.country.es+','+payload.country_code; });
+    return geoip.lookup(clientIp);
+
 }
 
 exports.IP = function(req){

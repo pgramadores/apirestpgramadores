@@ -56,7 +56,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 app.set('port', config.puerto);
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://'+config.domain);
+    res.setHeader('Access-Control-Allow-Origin', config.domain);
     res.setHeader('Access-Control-Allow-Methods', 'POST');
     res.setHeader('Content-Type','application/json');
     next();
@@ -86,7 +86,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/pgramadores', function(err) {
     if (!err) {
         https.createServer(options, app).listen(app.get('port'), function () {
-           console.log('Express corriendo en https://'+config.domain+':'+config.puerto);
+           console.log('Express corriendo en '+config.domain+':'+config.puerto);
         });
     }else{
         console.log(err.message);

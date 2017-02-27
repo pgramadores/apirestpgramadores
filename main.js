@@ -75,7 +75,7 @@ app.use(router);
 
 // Iniciamos el servidor y la base de datos
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://'+config.domain+'/pgramadores', function(err) {
+mongoose.connect('mongodb://localhost/pgramadores', function(err) {
     if (!err) {
         app.listen(app.get('port'), function(){
             console.log('Express corriendo en http://'+config.domain+':'+config.puerto);

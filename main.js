@@ -11,10 +11,18 @@ var moment = require('moment');
 var session = require('cookie-session');
 var frameguard = require('frameguard');
 var hsts = require('hsts');
+var fs = require('fs');
+var https = require('https');
 var ctrl = require('./controller');
 var config = require('./config');
 
 var app = express();
+
+// Cargamos certificados de seguridad SSL/TSL
+var options = {
+   key  : fs.readFileSync(config.certificados.private),
+   cert : fs.readFileSync(config.certificados.certificado)
+};
 
 // Configuramos Express
 app.use(helmet());
@@ -77,8 +85,8 @@ app.use(router);
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/pgramadores', function(err) {
     if (!err) {
-        app.listen(app.get('port'), function(){
-            console.log('Express corriendo en http://'+config.domain+':'+config.puerto);
+        https.createServer(options, app).listen(app.get('port'), function () {
+           console.log('Express corriendo en https://'+config.domain+':'+config.puerto);
         });
     }else{
         console.log(err.message);

@@ -9,7 +9,7 @@ exports.registro = function(req, res) {
         //prevencion de ataques
         if(serv.Sanar(req.body.correo) && serv.Sanar(req.body.nombres)){
 
-            let clientIp = config.dev ? '190.47.115.14': serv.IP(req);
+            let clientIp = config.dev ? config.iptest : serv.IP(req);
 
             let user = new User({
                 nombres:    req.body.nombres,

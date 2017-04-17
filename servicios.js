@@ -49,7 +49,7 @@ exports.CorreoVerificacion = function(correo){
     let mailOptions = {
         from: '"Pro-Gramadores" <no-reply@pro-gramadores.org>',
         to: correo,
-        subject: 'Confirmación de suscrpción a la comunidad de Pro-Gramadores',
+        subject: 'Confirmación de suscripción a la comunidad de Pro-Gramadores',
         html: CorreoHTML
     };
 
